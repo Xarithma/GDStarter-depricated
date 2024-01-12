@@ -6,7 +6,7 @@ import inquirer
 import requests
 
 
-def download_and_extract_template(template_url: str, project_name: str) -> None:
+def download_template_to_dir(template_url: str, project_name: str) -> None:
     template_name: str = template_url.split("/")[-5]
     zip_name: str = template_name + ".zip"
     r: requests.Response = requests.get(template_url)
@@ -34,7 +34,7 @@ def get_template_url(template: str) -> str:
 
 def create_project_from_template(template: str, project_name: str) -> None:
     template_url = get_template_url(template)
-    download_and_extract_template(template_url, project_name)
+    download_template_to_dir(template_url, project_name)
 
 
 def main() -> None:
@@ -54,20 +54,11 @@ def main() -> None:
         "--template",
         help="Specify project template",
     )
-    parser.add_argument(
-        "--extract-within-folder",
-        help=(
-            "With this option enabled, the template will be extracted in the"
-            " folder where the command is run. Otherwise, it will create a new"
-            " folder with the project name and extract the template there."
-        ),
-    )
 
     args: argparse.Namespace = parser.parse_args()
 
     name: str = args.name
     template: str = args.template
-    # features: list = args.features
 
     questions: list = []
 
@@ -83,25 +74,14 @@ def main() -> None:
             )
         )
 
-    # if not features:
-    #     questions.append(
-    #         inquirer.Checkbox(
-    #             "features",
-    #             message="Select features:",
-    #             choices=["Touch screen controls"],
-    #         )
-    #     )
-
     if questions:
         answers = inquirer.prompt(questions)
         name = answers.get("name", name)
         template = answers.get("template", template)
-        # features = answers.get("features", features)
 
     print(f"Creating project with name {name}...")
     print(f"Downloading template {template}...")
     create_project_from_template(template, name)
-    # print(f"Using features: {features}")
     print("\n")
     print("Done!")
     print("\n")
