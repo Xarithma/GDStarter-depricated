@@ -1,14 +1,15 @@
 import argparse
-import inquirer
 import os
-import requests
 import zipfile
 
+import inquirer
+import requests
 
-def download_and_extract_template(template_url, project_name):
-    template_name = template_url.split("/")[-5]
-    zip_name = template_name + ".zip"
-    r = requests.get(template_url)
+
+def download_and_extract_template(template_url: str, project_name: str) -> None:
+    template_name: str = template_url.split("/")[-5]
+    zip_name: str = template_name + ".zip"
+    r: requests.Response = requests.get(template_url)
 
     with open(zip_name, "wb") as f:
         f.write(r.content)
@@ -20,31 +21,55 @@ def download_and_extract_template(template_url, project_name):
     os.rename(template_name + "-main", project_name)
 
 
-def create_project_from_template(template, project_name):
-    if template == "First-person template":
-        first_person_template_url = "https://codeload.github.com/Xarithma/GodotFirstPersonTemplate/zip/refs/heads/main"
-        download_and_extract_template(first_person_template_url, project_name)
+def get_template_url(template: str) -> str:
+    url_start: str = "https://codeload.github.com/Xarithma/"
+    url_to_template: dict = {
+        "First-person template": "GodotFirstPersonTemplate",
+        "Third-person template": "GodotThirdPersonTemplate",
+    }
+    url_end: str = "/zip/refs/heads/main"
 
-    elif template == "Third-person template":
-        third_person_template_url = "https://codeload.github.com/Xarithma/GodotThirdPersonTemplate/zip/refs/heads/main"
-        download_and_extract_template(third_person_template_url, project_name)
+    return url_start + url_to_template[template] + url_end
 
 
-def main():
-    print("Starting main function...")
+def create_project_from_template(template: str, project_name: str) -> None:
+    template_url = get_template_url(template)
+    download_and_extract_template(template_url, project_name)
 
-    parser = argparse.ArgumentParser(description="A simple CLI tool.")
-    parser.add_argument("--name", help="Specify project name")
-    parser.add_argument("--features", nargs="*", help="Specify project features")
-    parser.add_argument("--template", help="Specify project template")
 
-    args = parser.parse_args()
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="A simple tool to start Godot projects.",
+    )
+    parser.add_argument(
+        "--name",
+        help="Specify project name",
+    )
+    parser.add_argument(
+        "--features",
+        nargs="*",
+        help="Specify project features",
+    )
+    parser.add_argument(
+        "--template",
+        help="Specify project template",
+    )
+    parser.add_argument(
+        "--extract-within-folder",
+        help=(
+            "With this option enabled, the template will be extracted in the"
+            " folder where the command is run. Otherwise, it will create a new"
+            " folder with the project name and extract the template there."
+        ),
+    )
 
-    name = args.name
-    template = args.template
-    # features = args.features
+    args: argparse.Namespace = parser.parse_args()
 
-    questions = []
+    name: str = args.name
+    template: str = args.template
+    # features: list = args.features
+
+    questions: list = []
 
     if not name:
         questions.append(inquirer.Text("name", message="Enter project name:"))
