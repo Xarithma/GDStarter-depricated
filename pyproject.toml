@@ -4,9 +4,10 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "gdstarter"
-version = "0.0.1"
+version = "0.0.4"
 description = "A simple CLI tool for creating Godot projects."
 authors = ["Zedespook"]
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.7"
