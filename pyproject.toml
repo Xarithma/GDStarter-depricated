@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools", "wheel", "poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "gdstarter"
+version = "0.0.1"
+description = "A simple CLI tool for creating Godot projects."
+authors = ["Zedespook"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+inquirer = "^3.2.1"
+requests = "^2.31.0"
+
+[tool.poetry.dev-dependencies]
+twine = "^4.0.2"
+
+[tool.poetry.scripts]
+gdstarter = 'gdstarter.main:main'

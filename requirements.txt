@@ -1,3 +1,6 @@
 inquirer
 twine
 requests
+wheel
+setuptools
+poetry-core
