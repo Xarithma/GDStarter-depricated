@@ -1,4 +1,4 @@
-# GDStarter
+# ~~GDStarter~~ We are moving back to using a plugin to manage this instead.
 
 The simple Godot CLI tool to start your project with the right boilerplate.
 
